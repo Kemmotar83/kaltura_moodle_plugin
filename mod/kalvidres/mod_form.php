@@ -149,8 +149,11 @@ class mod_kalvidres_mod_form extends moodleform_mod {
 
         $videopreview = $this->get_iframe_video_preview_markup($addinstance);
 
+        $videodetails = $this->get_video_details($addinstance);;
+
         $mform->addElement('static', 'add_video_thumb', '&nbsp;', $thumbnail);
-        $mform->addElement('html', $videopreview);
+        $mform->addElement('static', 'video_details', '&nbsp;', $videodetails);
+        $mform->addElement('static', 'video_preview', '&nbsp;', $videopreview);
 
         $videogroup = array();
         if ($addinstance) {
@@ -229,13 +232,39 @@ class mod_kalvidres_mod_form extends moodleform_mod {
             $params['src'] = $url->out(false);
         }
 
+        $header = html_writer::tag('h4', get_string('preview', 'mod_kalvidres'));
         $iframe = html_writer::tag('iframe', '', $params);
 
         $iframeContainer = html_writer::tag('div', $iframe, array(
             'class' => 'kaltura-player-container'
         ));
+        $output = html_writer::tag('div', $header . $iframeContainer);
 
-        return $iframeContainer;
+        return $output;
+    }
+
+    private function get_video_details($hide = false) {
+
+        $params = [];
+        if ($hide) {
+            $params['style'] = 'display: none';
+        }
+
+        $decodedmetadata = base64_decode($this->current->metadata);
+        $parsedmetadata = unserialize($decodedmetadata);
+
+        $details = [
+            'title' => get_string('metadata_title', 'mod_kalvidres') . ': ' . $parsedmetadata->title,
+            'description' => get_string('metadata_description', 'mod_kalvidres') . ': ' . $parsedmetadata->description,
+            'owner' => get_string('metadata_owner', 'mod_kalvidres') . ': ' . $parsedmetadata->owner,
+            'creation_date' => get_string('metadata_creationdate', 'mod_kalvidres') . ': ' . userdate($parsedmetadata->createdat)
+        ];
+
+        $header = html_writer::tag('h4', get_string('metadata', 'mod_kalvidres'));
+        $metadatalist = html_writer::alist($details);
+        $output = html_writer::div($header . $metadatalist, '', $params);
+
+        return $output;
     }
 
     /**
