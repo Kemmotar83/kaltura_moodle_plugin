@@ -38,6 +38,7 @@ $string['kalvidres:addinstance'] = 'Add a Kaltura Video Resource';
 $string['eventvideo_resource_viewed'] = 'Video resource viewed';
 $string['privacy:metadata'] = 'Kaltura video resource plugin does not store any personal data.';
 $string['metadata'] = 'Information';
+$string['metadata_id'] = 'Id';
 $string['metadata_title'] = 'Title';
 $string['metadata_description'] = 'Description';
 $string['metadata_owner'] = 'Owner';
