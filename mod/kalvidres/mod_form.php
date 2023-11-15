@@ -250,15 +250,20 @@ class mod_kalvidres_mod_form extends moodleform_mod {
             $params['style'] = 'display: none';
         }
 
+        $details = [];
+        $details['id'] = get_string('metadata_id', 'mod_kalvidres') . ': ' . $this->current->entry_id;
+        $details['title'] = get_string('metadata_title', 'mod_kalvidres') . ': ' . $this->current->video_title;
+
         $decodedmetadata = base64_decode($this->current->metadata);
         $parsedmetadata = unserialize($decodedmetadata);
 
-        $details = [
-            'title' => get_string('metadata_title', 'mod_kalvidres') . ': ' . $parsedmetadata->title,
-            'description' => get_string('metadata_description', 'mod_kalvidres') . ': ' . $parsedmetadata->description,
-            'owner' => get_string('metadata_owner', 'mod_kalvidres') . ': ' . $parsedmetadata->owner,
-            'creation_date' => get_string('metadata_creationdate', 'mod_kalvidres') . ': ' . userdate($parsedmetadata->createdat)
-        ];
+        if ($parsedmetadata) {
+//            $details['title'] = get_string('metadata_title', 'mod_kalvidres') . ': ' . $parsedmetadata->title;
+//            $details['description'] = get_string('metadata_description', 'mod_kalvidres') . ': ' . $parsedmetadata->description;
+            $details['owner'] = get_string('metadata_owner', 'mod_kalvidres') . ': ' . $parsedmetadata->owner;
+            $details['creation_date'] = get_string('metadata_creationdate', 'mod_kalvidres') . ': ' . userdate($parsedmetadata->createdat);
+//            $details['url'] = 'URL: ' . html_writer::link(local_kaltura_get_config()->kaf_uri . '/media/t/' . $parsedmetadata->entryid, 'Video', ['target' => '_blank']);
+        }
 
         $header = html_writer::tag('h4', get_string('metadata', 'mod_kalvidres'));
         $metadatalist = html_writer::alist($details);
